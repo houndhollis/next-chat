@@ -62,7 +62,7 @@ const SideBar = ({ selectedChatId } : ISideBarProps) => {
             key={receiver.email}
             sender={user}
             receiver={receiver}
-            chats={chats as IChat}
+            chats={chats as IChat[]}
             selectedChatId={selectedChatId}
           /> 
         ))}
