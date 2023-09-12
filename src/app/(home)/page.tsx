@@ -1,14 +1,29 @@
 'use client'
+import {useEffect} from 'react';
 import SideBar from '@/components/SideBar'
+import Login from '@/components/Login';
 import { IoChatbubblesOutline } from 'react-icons/io5'
 import { CgSpinner } from 'react-icons/cg'
-import {useAuthState} from 'react-firebase-hooks/auth';
-import { auth } from '@/firebase';
-import Login from '@/components/Login';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth, db } from '@/firebase';
+import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
 
 export default function Home() {
-
+  
   const [user, loading] = useAuthState(auth);
+  
+  useEffect(() => {
+    if (user) {
+      setDoc(doc(db, 'users', user.uid),
+        {
+          email: user.email,
+          lastActive: serverTimestamp(),
+          photoURL: user.photoURL,
+          displayName: user.displayName
+        }
+      )
+    }
+  },[user])
 
   if (!user) {
     return (
@@ -23,6 +38,7 @@ export default function Home() {
       </div>
     )
   }
+
 
   return (
     <main className="grid w-full grid-cols-8">
